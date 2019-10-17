@@ -1,0 +1,15 @@
+<h1>Jungle Signup</h1>
+
+<%= form_for :user, url: '/users' do |f| %>
+<div class="well">
+    <div class="form-group row">
+        First Name: <%= f.text_field :first_name %> 
+            Last Name: <%= f.text_field :last_name %>
+        Email: <%= f.text_field :email %>
+            Password: <%= f.password_field :password %>
+        Password Confirmation: <%= f.password_field :password_confirmation%>
+        <%= f.submit "Submit", class: "btn btn-info" %>
+    </div>
+</div>
+
+<% end %>
