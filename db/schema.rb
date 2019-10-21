@@ -22,6 +22,15 @@ ActiveRecord::Schema.define(version: 20160625062916) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "items", force: :cascade do |t|
+    t.string  "name",          limit: 255, null: false
+    t.string  "description",   limit: 255
+    t.string  "thumbnail_url", limit: 255
+    t.integer "price",         limit: 2,   null: false
+    t.integer "menu_id"
+    t.integer "restaurant_id"
+  end
+
   create_table "line_items", force: :cascade do |t|
     t.integer  "order_id"
     t.integer  "product_id"
@@ -34,6 +43,11 @@ ActiveRecord::Schema.define(version: 20160625062916) do
 
   add_index "line_items", ["order_id"], name: "index_line_items_on_order_id", using: :btree
   add_index "line_items", ["product_id"], name: "index_line_items_on_product_id", using: :btree
+
+  create_table "menus", force: :cascade do |t|
+    t.string  "name",          limit: 255, null: false
+    t.integer "restaurant_id"
+  end
 
   create_table "orders", force: :cascade do |t|
     t.integer  "total_cents"
@@ -54,7 +68,19 @@ ActiveRecord::Schema.define(version: 20160625062916) do
     t.integer  "category_id"
   end
 
-  add_index "products", ["category_id"], name: "index_products_on_category_id", using: :btree 
+  add_index "products", ["category_id"], name: "index_products_on_category_id", using: :btree
+
+  create_table "restaurants", force: :cascade do |t|
+    t.string  "name",        limit: 255, null: false
+    t.string  "cuisine",     limit: 255, null: false
+    t.integer "unit_number", limit: 2
+    t.string  "street",      limit: 255, null: false
+    t.string  "city",        limit: 255, null: false
+    t.string  "province",    limit: 255, null: false
+    t.string  "post_code",   limit: 255, null: false
+    t.string  "country",     limit: 255, null: false
+    t.integer "owner_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "first_name"
@@ -64,8 +90,18 @@ ActiveRecord::Schema.define(version: 20160625062916) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end
-  
+
+  create_table "users_order_statuses", force: :cascade do |t|
+    t.integer "order_id"
+    t.string  "user_order", limit: 255
+    t.integer "user_id"
+    t.string  "status",     limit: 255, default: "Not Accepted"
+  end
+
+  add_foreign_key "items", "menus", name: "items_menu_id_fkey", on_delete: :cascade
+  add_foreign_key "items", "restaurants", name: "items_restaurant_id_fkey", on_delete: :cascade
   add_foreign_key "line_items", "orders"
   add_foreign_key "line_items", "products"
+  add_foreign_key "menus", "restaurants", name: "menus_restaurant_id_fkey", on_delete: :cascade
   add_foreign_key "products", "categories"
 end
