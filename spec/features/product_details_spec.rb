@@ -24,9 +24,10 @@ RSpec.feature "ProductDetails", type: :feature, js: true do
     # DEBUG / VERIFY
 
     first('a.btn.btn-default').click
-
-    save_screenshot "product_details_1.png"
     expect(page).to have_content 'Apparel'
+    sleep(5)
+    
+    save_screenshot "product_details_1.png"
   end
 
 end
